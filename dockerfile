@@ -1,6 +1,6 @@
 FROM python:3.13
 
-WORKDIR /
+WORKDIR /FLASKWITHDB
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
