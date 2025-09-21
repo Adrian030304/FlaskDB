@@ -3,8 +3,22 @@ from models import Person
 
 def register_routes(app, db):
 
-    @app.route('/')
+    @app.route('/', methods=['GET', 'POST'])
     def index():
-        people = Person.query.all()
-        return str(people)
+        if request.method == 'POST':
+            name, age, job = request.form.values()
+            new_person = Person(name=name, age=age, job=job)
+            db.session.add(new_person)
+            db.session.commit()
+            people = Person.query.all()
+            return render_template('index.html', people=people)
+        else:
+            people = Person.query.all()
+            return render_template('index.html', people=people)
     
+    @app.route('/delete/<pid>', methods=["DELETE"])
+    def delete(pid):
+        Person.query.filter(Person.pid == pid).delete()
+        db.session.commit()
+        people = Person.query.all()
+        return render_template('index.html', people=people )
